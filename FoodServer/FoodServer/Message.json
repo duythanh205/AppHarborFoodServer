@@ -1,0 +1,6 @@
+﻿{
+  "500": "Có lỗi từ server",
+  "200": "Thành công",
+  "-99999": "Có lỗi trong quá trình xử lý. Vui lòng thực hiện lại.",
+  "400": "Request không đúng quy định.",
+}
