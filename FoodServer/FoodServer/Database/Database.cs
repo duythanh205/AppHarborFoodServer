@@ -234,7 +234,7 @@ namespace FoodServer.Database
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand(query, connect))
                 {
-                    cmd.Parameters.Add("@now", SqlDbType.DateTime).Value = DateTime.Now;
+                    cmd.Parameters.Add("@now", SqlDbType.DateTime).Value = DateTime.Now.ToStartDate();
 
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
