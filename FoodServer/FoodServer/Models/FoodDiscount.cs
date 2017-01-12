@@ -10,7 +10,7 @@ namespace FoodServer.Models
         public int ID { set; get; }
         public int FOOD_ID { set; get; }
         public int DISCOUNT_PERCENT { set; get; }
-        public DateTime START_DATE { set; get; }
+        public DateTime STARTS_DATE { set; get; }
         public DateTime END_DATE { set; get; }
         public string DISCOUNT_DESCRIPTION { set; get; }
 
@@ -22,7 +22,7 @@ namespace FoodServer.Models
             this.END_DATE = foodDiscount.END_DATE;
             this.FOOD_ID = foodDiscount.FOOD_ID;
             this.ID = foodDiscount.ID;
-            this.START_DATE = foodDiscount.START_DATE;
+            this.STARTS_DATE = foodDiscount.STARTS_DATE;
 
         }
     }

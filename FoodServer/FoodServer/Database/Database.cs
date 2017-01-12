@@ -158,7 +158,7 @@ namespace FoodServer.Database
             SqlDataReader reader = null;
             List<FoodDiscount> list = new List<FoodDiscount>();
             object result = null;
-            string query = "select* from FOOD_DISCOUNT where FOOD_ID = @id and START_DATE <= @now and END_DATE >= @now";
+            string query = "select* from FOOD_DISCOUNT where FOOD_ID = @id and STARTS_DATE <= @now and END_DATE >= @now";
 
             try
             {
@@ -183,7 +183,7 @@ namespace FoodServer.Database
                                 DISCOUNT_DESCRIPTION = reader["DISCOUNT_DESCRIPTION"].ToString().Trim(),
                                 DISCOUNT_PERCENT = (int)reader["DISCOUNT_PERCENT"],
                                 END_DATE = (DateTime)reader["END_DATE"],
-                                START_DATE = (DateTime)reader["START_DATE"],
+                                STARTS_DATE = (DateTime)reader["STARTS_DATE"],
                             });
                         }
 
@@ -227,7 +227,7 @@ namespace FoodServer.Database
             SqlDataReader reader = null;
             List<FoodDiscount> list = new List<FoodDiscount>();
             object result = null;
-            string query = "select* from FOOD_DISCOUNT where START_DATE <= @now and END_DATE >= @now";
+            string query = "select* from FOOD_DISCOUNT where STARTS_DATE <= @now and END_DATE >= @now";
 
             try
             {
@@ -246,7 +246,7 @@ namespace FoodServer.Database
                             DISCOUNT_DESCRIPTION = reader["DISCOUNT_DESCRIPTION"].ToString().Trim(),
                             DISCOUNT_PERCENT = (int)reader["DISCOUNT_PERCENT"],
                             END_DATE = (DateTime)reader["END_DATE"],
-                            START_DATE = (DateTime)reader["START_DATE"],
+                            STARTS_DATE = (DateTime)reader["STARTS_DATE"],
                         });
                     }
 
@@ -399,7 +399,7 @@ namespace FoodServer.Database
             SqlDataReader reader = null;
             FoodDiscount foodDiscount = null;
             object result = null;
-            string query = "select* from FOOD_DISCOUNT where START_DATE <= @now and END_DATE >= @now and FOOD_ID = @FoodID";
+            string query = "select* from FOOD_DISCOUNT where STARTS_DATE <= @now and END_DATE >= @now and FOOD_ID = @FoodID";
 
             try
             {
@@ -419,7 +419,7 @@ namespace FoodServer.Database
                             DISCOUNT_DESCRIPTION = reader["DISCOUNT_DESCRIPTION"].ToString().Trim(),
                             DISCOUNT_PERCENT = (int)reader["DISCOUNT_PERCENT"],
                             END_DATE = (DateTime)reader["END_DATE"],
-                            START_DATE = (DateTime)reader["START_DATE"],
+                            STARTS_DATE = (DateTime)reader["STARTS_DATE"],
                         };
                     }
 
