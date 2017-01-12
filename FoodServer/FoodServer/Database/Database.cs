@@ -227,14 +227,14 @@ namespace FoodServer.Database
             SqlDataReader reader = null;
             List<FoodDiscount> list = new List<FoodDiscount>();
             object result = null;
-            string query = "select* from FOOD_DISCOUNT where STARTS_DATE <= @now and END_DATE >= @now";
+            string query = "select* from FOOD_DISCOUNT where STARTS_DATE <= @dt and END_DATE >= @dt";
 
             try
             {
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand(query, connect))
                 {
-                    cmd.Parameters.Add("@now", SqlDbType.DateTime).Value = DateTime.Now.ToStartDate();
+                    cmd.Parameters.Add("@dt", SqlDbType.DateTime).Value = DateTime.Now.ToStartDate();
 
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
