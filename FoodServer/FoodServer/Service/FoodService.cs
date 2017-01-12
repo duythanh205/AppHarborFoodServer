@@ -43,8 +43,8 @@ namespace FoodServer.Service
 
                 return new GetFoodRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
-                    ListFoodRes = null
+                    Code = ResStatusCode.Success,
+                    ListFoodRes = new List<FoodRESPONSE>()
                 };
 
             }
