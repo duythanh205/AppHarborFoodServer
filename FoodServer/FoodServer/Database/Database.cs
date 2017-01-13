@@ -158,7 +158,7 @@ namespace FoodServer.Database
             SqlDataReader reader = null;
             List<FoodDiscount> list = new List<FoodDiscount>();
             object result = null;
-            string query = "select* from FOOD_DISCOUNT where FOOD_ID = @id and STARTS_DATE <= @now and END_DATE >= @now";
+            string query = "select* from FOOD_DISCOUNT where FOOD_ID = @id and STARTS_DATE <= @dt and END_DATE >= @dt";
 
             try
             {
@@ -166,12 +166,12 @@ namespace FoodServer.Database
                 using (SqlCommand cmd = new SqlCommand(query, connect))
                 {
                     cmd.Parameters.Add("@id", SqlDbType.Int);
-                    cmd.Parameters.Add("@now", SqlDbType.DateTime);
+                    cmd.Parameters.Add("@dt", SqlDbType.DateTime);
 
                     foreach (var food in req)
                     {
                         cmd.Parameters["@id"].Value = food.ID;
-                        cmd.Parameters["@now"].Value = DateTime.Now;
+                        cmd.Parameters["@dt"].Value = DateTime.Now;
 
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
@@ -399,14 +399,14 @@ namespace FoodServer.Database
             SqlDataReader reader = null;
             FoodDiscount foodDiscount = null;
             object result = null;
-            string query = "select* from FOOD_DISCOUNT where STARTS_DATE <= @now and END_DATE >= @now and FOOD_ID = @FoodID";
+            string query = "select* from FOOD_DISCOUNT where STARTS_DATE <= @dt and END_DATE >= @dt and FOOD_ID = @FoodID";
 
             try
             {
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand(query, connect))
                 {
-                    cmd.Parameters.Add("@now", SqlDbType.DateTime).Value = DateTime.Now;
+                    cmd.Parameters.Add("@dt", SqlDbType.DateTime).Value = DateTime.Now;
                     cmd.Parameters.Add("@FoodID", SqlDbType.Int).Value = FoodID;
 
                     reader = cmd.ExecuteReader();
