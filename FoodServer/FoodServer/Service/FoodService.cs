@@ -87,7 +87,7 @@ namespace FoodServer.Service
                 return new GetFoodRESPONSE()
                 {
                     Code = ResStatusCode.Success,
-                    ListFoodRes = new List<FoodRESPONSE>()
+                    ListFoodRes = null
                 };
 
             }
@@ -149,7 +149,7 @@ namespace FoodServer.Service
 
                 return new GetFoodRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     ListFoodRes = null
                 };
 
@@ -181,7 +181,7 @@ namespace FoodServer.Service
 
                 return new GetUserRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     user = null
                 };
 
@@ -213,7 +213,7 @@ namespace FoodServer.Service
 
                 return new GetUserEvalRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     userEval = null
                 };
 
@@ -245,7 +245,7 @@ namespace FoodServer.Service
 
                 return new GetUserComment()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     userComments = null
                 };
 
@@ -277,7 +277,7 @@ namespace FoodServer.Service
 
                 return new UpdateEvalRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     userEval = null
                 };
 
@@ -316,7 +316,7 @@ namespace FoodServer.Service
 
                 return new AddUserEvalRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     userEval = null
                 };
 
@@ -348,7 +348,7 @@ namespace FoodServer.Service
 
                 return new UpdateFoodEvalRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     foodEval = null
                 };
 
@@ -388,7 +388,7 @@ namespace FoodServer.Service
 
                 return new AddFoodEvalRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     foodEval = null
                 };
 
@@ -424,7 +424,7 @@ namespace FoodServer.Service
 
                 return new AddUserCommentRESPONSE()
                 {
-                    Code = ResStatusCode.InternalServerError,
+                    Code = ResStatusCode.Success,
                     userComment = null
                 };
 
