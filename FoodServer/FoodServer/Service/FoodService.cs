@@ -131,26 +131,25 @@ namespace FoodServer.Service
                 if (FoodDiscount != null)
                 {
                     var ListFood = foodDAO.GetListFoodFromDiscount<List<Food>>(new List<FoodDiscount>() { new FoodDiscount(FoodDiscount) });
-                    List<FoodRESPONSE> res = new List<FoodRESPONSE>()
-                    {
-                        new FoodRESPONSE()
-                        {
-                            Food = ListFood.ToList().FirstOrDefault(),
-                            FoodDiscount = FoodDiscount,
-                        }
-                    };
 
                     return new GetFoodRESPONSE()
                     {
                         Code = ResStatusCode.Success,
-                        ListFoodRes = res
+                        ListFoodRes = new List<FoodRESPONSE>()
+                        {
+                            new FoodRESPONSE()
+                            {
+                                Food = ListFood.ToList().FirstOrDefault(),
+                                FoodDiscount = FoodDiscount,
+                            }
+                        }
                     };
                 }
 
                 return new GetFoodRESPONSE()
                 {
                     Code = ResStatusCode.Success,
-                    ListFoodRes = null
+                    ListFoodRes = new List<FoodRESPONSE>()
                 };
 
             }
@@ -185,6 +184,44 @@ namespace FoodServer.Service
                     user = null
                 };
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Lấy user by id
+        /// </summary>
+        /// <returns></returns>
+        public GetFoodRESPONSE GetFoodByID(int FoodID)
+        {
+            try
+            {
+                var food = foodDAO.GetFoodByID<Food>(FoodID);
+                if(food != null)
+                {
+                    var FoodDiscount = foodDAO.GetDiscountByID<FoodDiscount>(FoodID);
+                    return new GetFoodRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                        ListFoodRes = new List<FoodRESPONSE>()
+                        {
+                            new FoodRESPONSE()
+                            {
+                                Food = food,
+                                FoodDiscount = FoodDiscount,
+                            }
+                        }
+                    };
+                }
+
+                return new GetFoodRESPONSE()
+                {
+                    Code = ResStatusCode.Success,
+                    ListFoodRes = null
+                };
             }
             catch (Exception ex)
             {

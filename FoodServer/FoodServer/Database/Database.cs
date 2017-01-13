@@ -504,6 +504,61 @@ namespace FoodServer.Database
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
+        public T GetFoodByID<T>(int FoodID)
+        {
+            SqlDataReader reader = null;
+            Food food = null;
+            object result = null;
+            string query = "SELECT * FROM dbo.FOODS WHERE ID = @FoodID";
+
+            try
+            {
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    cmd.Parameters.Add("@FoodID", SqlDbType.Int).Value = FoodID;
+
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        food = new Food()
+                        {
+                            AVATAR = reader["AVATAR"].ToString().Trim(),
+                            ID = (int)reader["ID"],
+                            NAME = reader["NAME"].ToString().Trim(),
+                            ADDRESS = reader["ADDRESS"].ToString().Trim(),
+                            CREATED_DATE = (DateTime)reader["CREATED_DATE"]
+                        };
+                    }
+
+                }
+
+                result = food;
+                return (T)result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lấy user by id 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public T GetUserEval<T>(int UserID, int FoodID)
         {
             SqlDataReader reader = null;
@@ -524,7 +579,7 @@ namespace FoodServer.Database
                     {
                         userEvaluation = new UserEvaluation()
                         {
-                            EVALUATION = (float)reader["EVALUATION"],
+                            EVALUATION = float.Parse(reader["EVALUATION"].ToString().Trim()),
                             FOOD_ID = (int)reader["FOOD_ID"],
                             ID = (int)reader["ID"],
                             USER_ID = (int)reader["USER_ID"],
@@ -562,7 +617,7 @@ namespace FoodServer.Database
         public T GetUserComment<T>(int FoodID)
         {
             SqlDataReader reader = null;
-            List<UserComment> userComments = null;
+            List<UserComment> userComments = new List<UserComment>();
             object result = null;
             string query = "select* from USER_FOOD_COMMENT where FOOD_ID = @FoodID";
 
@@ -617,29 +672,39 @@ namespace FoodServer.Database
         {
             int result = -1;
             object res = null;
-            string query = "update dbo.USER_FOOD_EVALUATION values (@EVALUATION) where ID = @EvalID";
+            SqlDataReader reader = null;
+            string query = "UPDATE USER_FOOD_EVALUATION SET EVALUATION = @eval WHERE ID = @EvalID";
             try
             {
                 connect.Open();
                 using (SqlCommand command = new SqlCommand(query, connect))
                 {
                     command.Parameters.Add("@EvalID", SqlDbType.Int).Value = EvalID;
-                    command.Parameters["@EVALUATION"].Value = Point;
+                    command.Parameters.Add("@eval", SqlDbType.Float).Value = Point;
 
                     result = command.ExecuteNonQuery();
-                    if(result > 0)
+                    if (result > 0)
                     {
-                        UserEvaluation eval = new UserEvaluation()
+                        string getQuery = string.Format("Select * from USER_FOOD_EVALUATION where ID = {0}", EvalID);
+                        using (SqlCommand cmd = new SqlCommand(getQuery, connect))
                         {
-                            EVALUATION = (float)command.Parameters["@EVALUATION"].Value,
-                            FOOD_ID = (int)command.Parameters["@FOOD_ID"].Value,
-                            ID = (int)command.Parameters["@ID"].Value,
-                            USER_ID = (int)command.Parameters["@USER_ID"].Value
-                        };
-                        res = eval;
+                            reader = cmd.ExecuteReader();
+                            UserEvaluation eval = null;
+                            while (reader.Read())
+                            {
+                                eval = new UserEvaluation()
+                                {
+                                    EVALUATION = float.Parse(reader["EVALUATION"].ToString().Trim()),
+                                    FOOD_ID = (int)reader["FOOD_ID"],
+                                    ID = (int)reader["ID"],
+                                    USER_ID = (int)reader["USER_ID"]
+                                };
+                            }
+                            res = eval;
+                        }
                     }
                 }
-                
+
                 return (T)res;
             }
             catch (Exception ex)
@@ -700,30 +765,40 @@ namespace FoodServer.Database
         {
             int result = -1;
             object res = null;
-            string query = "update dbo.FOOD_EVALUATION values (@FOOD_ID, @AVARAGE_POINT, @TOTAL_POINT, @TOTAL_USER) where ID = @evalID";
+            SqlDataReader reader = null;
+            string query = "UPDATE FOOD_EVALUATION SET FOOD_ID = @foodid, AVARAGE_POINT = @avagare, TOTAL_POINT = @totalPoint, TOTAL_USER = @totalUser WHERE FOOD_ID = @id";
             try
             {
                 connect.Open();
                 using (SqlCommand command = new SqlCommand(query, connect))
                 {
-                    command.Parameters.Add("@evalID", SqlDbType.Int).Value = req.FOOD_ID;
-                    command.Parameters["@FOOD_ID"].Value = req.FOOD_ID;
-                    command.Parameters["@AVARAGE_POINT"].Value = req.AVARAGE_POINT;
-                    command.Parameters["@TOTAL_POINT"].Value = req.TOTAL_POINT;
-                    command.Parameters["@TOTAL_USER"].Value = req.TOTAL_USER;
+                    command.Parameters.Add("@foodID", SqlDbType.Int).Value = req.FOOD_ID;
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = req.FOOD_ID;
+                    command.Parameters.Add("@avagare", SqlDbType.Float).Value = req.AVARAGE_POINT;
+                    command.Parameters.Add("@totalPoint", SqlDbType.Float).Value = req.TOTAL_POINT;
+                    command.Parameters.Add("@totalUser", SqlDbType.Int).Value = req.TOTAL_USER;
 
                     result = command.ExecuteNonQuery();
                     if (result > 0)
                     {
-                        FoodEvaluation eval = new FoodEvaluation()
+                        string getQuery = string.Format("Select * from FOOD_EVALUATION where FOOD_ID = {0}", req.FOOD_ID);
+                        using (SqlCommand cmd = new SqlCommand(getQuery, connect))
                         {
-                            AVARAGE_POINT = (float)command.Parameters["@AVARAGE_POINT"].Value,
-                            FOOD_ID = (int)command.Parameters["@FOOD_ID"].Value,
-                            ID = (int)command.Parameters["@ID"].Value,
-                            TOTAL_POINT = (float)command.Parameters["@TOTAL_POINT"].Value,
-                            TOTAL_USER = (int)command.Parameters["@TOTAL_USER"].Value
-                        };
-                        res = eval;
+                            reader = cmd.ExecuteReader();
+                            FoodEvaluation eval = null;
+                            while (reader.Read())
+                            {
+                                eval = new FoodEvaluation()
+                                {
+                                    AVARAGE_POINT = float.Parse(reader["AVARAGE_POINT"].ToString().Trim()),
+                                    FOOD_ID = (int)reader["FOOD_ID"],
+                                    ID = (int)reader["ID"],
+                                    TOTAL_POINT = float.Parse(reader["TOTAL_POINT"].ToString().Trim()),
+                                    TOTAL_USER = (int)reader["TOTAL_USER"]
+                                };
+                            }
+                            res = eval;
+                        }
                     }
                 }
 

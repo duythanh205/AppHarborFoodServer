@@ -157,6 +157,27 @@ namespace FoodServer.DAO
         }
 
         /// <summary>
+        /// Lấy user by id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public T GetFoodByID<T>(int FoodID)
+        {
+            try
+            {
+                object result = null;
+                result = Database.Database.GetInstance().GetFoodByID<T>(FoodID);
+
+                return (T)result;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Lấy đánh giá
         /// </summary>
         /// <typeparam name="T"></typeparam>

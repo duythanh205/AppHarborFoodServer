@@ -74,13 +74,31 @@ namespace FoodServer.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("Api/Food/v1/GetFoodDisCount/{FoodID}")]
-        [Route("Api/Food/v1/GetFood/{FoodID}")]
         [HttpGet]
         public HttpResponseMessage GetFoodDisCountByID(int FoodID)
         {
             try
             {
                 var result = foodService.GetFoodDiscountByID(FoodID);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.ListFoodRes.ToList().FirstOrDefault()));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/GetFood/{FoodID}")]
+        [HttpGet]
+        public HttpResponseMessage GetFoodByID(int FoodID)
+        {
+            try
+            {
+                var result = foodService.GetFoodByID(FoodID);
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.ListFoodRes.ToList().FirstOrDefault()));
             }
             catch
