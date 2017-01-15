@@ -272,6 +272,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserComment.cs" />
     <Compile Include="Models\UserEvaluation.cs" />
+    <Compile Include="Models\UserFavoriteFood.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
