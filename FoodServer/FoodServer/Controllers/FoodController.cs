@@ -184,18 +184,18 @@ namespace FoodServer.Controllers
         /// Update Điểm đánh giá
         /// </summary>
         /// <returns></returns>
-        [Route("Api/Food/v1/UpdateEval/{EvalID}")]
+        [Route("Api/Food/v1/UpdateEval")]
         [HttpPut]
-        public HttpResponseMessage UpdateEval([FromUri]int EvalID, [FromBody] float Point)
+        public HttpResponseMessage UpdateEval([FromBody] UpdateEvalREQUEST req)
         {
             try
             {
-                if (EvalID < 0 || Point < 0 || Point > 10)
+                if (req.EvalID < 0 || req.Point < 0 || req.Point > 10)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
                 }
 
-                var result = foodService.UpdateEval(EvalID, Point);
+                var result = foodService.UpdateEval(req.EvalID, req.Point);
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.userEval));
             }
             catch
@@ -293,6 +293,128 @@ namespace FoodServer.Controllers
 
                 var result = foodService.AddUserComment(req);
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.userComment));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// Update Điểm đánh giá
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/AddUserFavoriteFood")]
+        [HttpPost]
+        public HttpResponseMessage AddUserFavoriteFood([FromBody] AddUserFavoriteREQUEST req)
+        {
+            try
+            {
+                if (req.FOOD_ID < 0 || req.USER_ID < 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
+                }
+
+                var result = foodService.AddUserFavoriteFood(req);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.userFavoriteFood));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// Lấy thông tin đánh giá của user
+        /// Api/Food/v1/GetUserFavoriteByID?UserID=1&FoodID=2
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/GetUserFavoriteByID")]
+        [HttpGet]
+        public HttpResponseMessage GetUserFavoriteByID(int UserID, int FoodID)
+        {
+            try
+            {
+                if (UserID < 0 || FoodID < 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
+                }
+
+                var result = foodService.GetUserFavoriteByID(UserID, FoodID);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.userFavoriteFood));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// Delete 1 cart theo id
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/DeleteUserFoodFavorite/{id}")]
+        [HttpDelete]
+        public HttpResponseMessage DeleteUserFoodFavorite([FromUri]int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest));
+                }
+
+                var result = foodService.DeleteUserFoodFavorite(id);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, null));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// Lấy thông tin USER
+        /// Api/Food/v1/GetUser?token=dasdasy
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/GetUser")]
+        [HttpGet]
+        public HttpResponseMessage GetUserByToken(string token)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
+                }
+
+                var result = foodService.GetUserByToken(token);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.user));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// Update Điểm đánh giá
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/AddUser")]
+        [HttpPost]
+        public HttpResponseMessage AddUser([FromBody] AddUserREQUEST req)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(req.NAME) || string.IsNullOrEmpty(req.TOKEN) || string.IsNullOrEmpty(req.TYPE))
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
+                }
+
+                var result = foodService.AddUser(req);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.user));
             }
             catch
             {

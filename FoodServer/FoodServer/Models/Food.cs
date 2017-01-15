@@ -12,5 +12,8 @@ namespace FoodServer.Models
         public string ADDRESS { set; get; }
         public string AVATAR { set; get; }
         public DateTime CREATED_DATE { set; get; }
+        public string PHONE { set; get; }
+        public string FACEBOOK { set; get; }
+        public string PRICE { set; get; }
     }
 }

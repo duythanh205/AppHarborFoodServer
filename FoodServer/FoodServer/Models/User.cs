@@ -10,5 +10,7 @@ namespace FoodServer.Models
         public int ID { set; get; }
         public string NAME { set; get; }
         public string AVATAR { set; get; }
+        public string TYPE { set; get; }
+        public string TOKEN { set; get; }
     }
 }

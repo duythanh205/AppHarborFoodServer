@@ -123,6 +123,9 @@ namespace FoodServer.Database
                             AVATAR = reader["AVATAR"].ToString().Trim(),
                             CREATED_DATE = (DateTime)reader["CREATED_DATE"],
                             NAME = reader["NAME"].ToString().Trim(),
+                            FACEBOOK = reader["FACEBOOK"].ToString().Trim(),
+                            PHONE = reader["PHONE"].ToString().Trim(),
+                            PRICE = reader["PRICE"].ToString().Trim()
                         });
                     }
                 }
@@ -306,6 +309,9 @@ namespace FoodServer.Database
                                 AVATAR = reader["AVATAR"].ToString().Trim(),
                                 CREATED_DATE = (DateTime)reader["CREATED_DATE"],
                                 NAME = reader["NAME"].ToString().Trim(),
+                                FACEBOOK = reader["FACEBOOK"].ToString().Trim(),
+                                PHONE = reader["PHONE"].ToString().Trim(),
+                                PRICE = reader["PRICE"].ToString().Trim()
                             });
                         }
 
@@ -473,6 +479,8 @@ namespace FoodServer.Database
                             AVATAR = reader["AVATAR"].ToString().Trim(),
                             ID = (int)reader["ID"],
                             NAME = reader["NAME"].ToString().Trim(),
+                            TOKEN = reader["TOKEN"].ToString().Trim(),
+                            TYPE = reader["TYPE"].ToString().Trim()
                         };
                     }
 
@@ -527,7 +535,10 @@ namespace FoodServer.Database
                             ID = (int)reader["ID"],
                             NAME = reader["NAME"].ToString().Trim(),
                             ADDRESS = reader["ADDRESS"].ToString().Trim(),
-                            CREATED_DATE = (DateTime)reader["CREATED_DATE"]
+                            CREATED_DATE = (DateTime)reader["CREATED_DATE"],
+                            FACEBOOK = reader["FACEBOOK"].ToString().Trim(),
+                            PHONE = reader["PHONE"].ToString().Trim(),
+                            PRICE = reader["PRICE"].ToString().Trim()
                         };
                     }
 
@@ -617,7 +628,7 @@ namespace FoodServer.Database
         public T GetUserComment<T>(int FoodID)
         {
             SqlDataReader reader = null;
-            List<UserComment> userComments = new List<UserComment>();
+            List<UserCommentRESPONSE> userComments = new List<UserCommentRESPONSE>();
             object result = null;
             string query = "select* from USER_FOOD_COMMENT where FOOD_ID = @FoodID";
 
@@ -631,16 +642,33 @@ namespace FoodServer.Database
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        userComments.Add(new UserComment()
+                        userComments.Add(new UserCommentRESPONSE()
                         {
                             COMMENT = reader["COMMENT"].ToString().Trim(),
                             FOOD_ID = (int)reader["FOOD_ID"],
                             ID = (int)reader["ID"],
-                            USER_ID = (int)reader["USER_ID"]
+                            USER_ID = (int)reader["USER_ID"],
                         });
                     }
 
+                    reader.Close();
                 }
+
+                userComments.ForEach(f =>
+                {
+                    string getQuery = string.Format("select* from USERS where ID = {0}", f.USER_ID);
+                    using (SqlCommand command = new SqlCommand(getQuery, connect))
+                    {
+                        SqlDataReader getReader = command.ExecuteReader();
+
+                        getReader.Read();
+
+                        f.USER_AVATAR = getReader["AVATAR"].ToString().Trim();
+                        f.USER_NAME = getReader["NAME"].ToString().Trim();
+
+                        getReader.Close();
+                    }
+                });
 
                 result = userComments;
                 return (T)result;
@@ -889,5 +917,224 @@ namespace FoodServer.Database
                 }
             }
         }
+
+        /// <summary>
+        /// Thêm data vào bảng User_favorite_food
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public int InsertTblUserFavoriteFood(AddUserFavoriteREQUEST req)
+        {
+            int id = -1;
+            string query = "insert into dbo.USER_FAVORITE_FOOD Output Inserted.ID values (@USER_ID, @FOOD_ID, @FAVORITE_FOOD_DESCRIPTION)";
+            try
+            {
+                connect.Open();
+                using (SqlCommand command = new SqlCommand(query, connect))
+                {
+                    command.Parameters.Add("@USER_ID", SqlDbType.Int).Value = req.USER_ID;
+                    command.Parameters.Add("@FOOD_ID", SqlDbType.Int).Value = req.FOOD_ID;
+                    command.Parameters.Add("@FAVORITE_FOOD_DESCRIPTION", SqlDbType.NVarChar).Value = req.FAVORITE_FOOD_DESCRIPTION;
+
+                    id = (int)command.ExecuteScalar();
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lấy user_food_favorite by id 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public T GetUserFavoriteByID<T>(int UserID, int FoodID)
+        {
+            SqlDataReader reader = null;
+            UserFavoriteFood userFavoriteFood = null;
+            object result = null;
+            string query = "select* from USER_FAVORITE_FOOD where USER_ID = @UserID and FOOD_ID = @FoodID";
+
+            try
+            {
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserID;
+                    cmd.Parameters.Add("@FoodID", SqlDbType.Int).Value = FoodID;
+
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        userFavoriteFood = new UserFavoriteFood()
+                        {
+                            FAVORITE_FOOD_DESCRIPTION = reader["FAVORITE_FOOD_DESCRIPTION"].ToString().Trim(),
+                            FOOD_ID = (int)reader["FOOD_ID"],
+                            ID = (int)reader["ID"],
+                            USER_ID = (int)reader["USER_ID"],
+                        };
+                    }
+
+                }
+
+                result = userFavoriteFood;
+                return (T)result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Xóa favorite
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public int DeleteUserFoodFavorite(int ID)
+        {
+            int id = -1;
+            string query = "DELETE FROM USER_FAVORITE_FOOD WHERE ID = @id ";
+            try
+            {
+                connect.Open();
+                using (SqlCommand command = new SqlCommand(query, connect))
+                {
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = ID;
+                    id = (int)command.ExecuteNonQuery();
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lấy user by id 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public T GetUserByToken<T>(string Token)
+        {
+            SqlDataReader reader = null;
+            User user = null;
+            object result = null;
+            string query = "SELECT * FROM dbo.USERS WHERE TOKEN = @token";
+
+            try
+            {
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    cmd.Parameters.Add("@token", SqlDbType.NVarChar).Value = Token;
+
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        user = new User()
+                        {
+                            AVATAR = reader["AVATAR"].ToString().Trim(),
+                            ID = (int)reader["ID"],
+                            NAME = reader["NAME"].ToString().Trim(),
+                            TOKEN = reader["TOKEN"].ToString().Trim(),
+                            TYPE = reader["TYPE"].ToString().Trim()
+                        };
+                    }
+
+                }
+
+                result = user;
+                return (T)result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thêm data vào bảng UserEval
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public int InsertTblUser(AddUserREQUEST req)
+        {
+            int id = -1;
+            string query = "insert into dbo.USERS Output Inserted.ID values (@NAME, @AVATAR, @TYPE, @TOKEN)";
+            try
+            {
+                connect.Open();
+                using (SqlCommand command = new SqlCommand(query, connect))
+                {
+                    command.Parameters.Add("@NAME", SqlDbType.NVarChar).Value = req.NAME;
+                    command.Parameters.Add("@AVATAR", SqlDbType.NVarChar).Value = req.AVATAR;
+                    command.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = req.TYPE;
+                    command.Parameters.Add("@TOKEN", SqlDbType.NVarChar).Value = req.TOKEN;
+
+                    id = (int)command.ExecuteScalar();
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
+
+
     }
 }

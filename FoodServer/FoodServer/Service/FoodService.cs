@@ -269,7 +269,7 @@ namespace FoodServer.Service
         {
             try
             {
-                var result = foodDAO.GetUserComment<List<UserComment>>(FoodID);
+                var result = foodDAO.GetUserComment<List<UserCommentRESPONSE>>(FoodID);
                 if (result != null)
                 {
 
@@ -463,6 +463,174 @@ namespace FoodServer.Service
                 {
                     Code = ResStatusCode.Success,
                     userComment = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Thêm 1 sản phẩm vào database
+        /// </summary>
+        /// <returns></returns>
+        public AddUserFavoriteFoodRESPONSE AddUserFavoriteFood(AddUserFavoriteREQUEST req)
+        {
+            try
+            {
+                int ID = foodDAO.AddUserFavoriteFood(req);
+                if (ID > 0)
+                {
+                    return new AddUserFavoriteFoodRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                        userFavoriteFood = new UserFavoriteFood()
+                        {
+                            ID = ID,
+                            FAVORITE_FOOD_DESCRIPTION = req.FAVORITE_FOOD_DESCRIPTION,
+                            USER_ID = req.USER_ID,
+                            FOOD_ID = req.FOOD_ID
+                        }
+                    };
+                }
+
+                return new AddUserFavoriteFoodRESPONSE()
+                {
+                    Code = ResStatusCode.Success,
+                    userFavoriteFood = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Lấy 
+        /// </summary>
+        /// <returns></returns>
+        public GetUserFavoriteRESPONSE GetUserFavoriteByID(int UserID, int FoodID)
+        {
+            try
+            {
+                var result = foodDAO.GetUserFavoriteByID<UserFavoriteFood>(UserID, FoodID);
+                if (result != null)
+                {
+
+                    return new GetUserFavoriteRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                        userFavoriteFood = result
+                    };
+                }
+
+                return new GetUserFavoriteRESPONSE()
+                {
+                    Code = ResStatusCode.Success,
+                    userFavoriteFood = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Lấy cart theo id
+        /// </summary>
+        /// <returns></returns>
+        public DeleteUserFavoriteFoodRESPONSE DeleteUserFoodFavorite(int id)
+        {
+            try
+            {
+                int res = foodDAO.DeleteUserFoodFavorite(id);
+                if (res > 0)
+                {
+                    return new DeleteUserFavoriteFoodRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                    };
+                }
+
+                return new DeleteUserFavoriteFoodRESPONSE()
+                {
+                    Code = ResStatusCode.InternalServerError,
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Lấy user by id
+        /// </summary>
+        /// <returns></returns>
+        public GetUserRESPONSE GetUserByToken(string Token)
+        {
+            try
+            {
+                var user = foodDAO.GetUserByToken<User>(Token);
+                if (user != null)
+                {
+
+                    return new GetUserRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                        user = user
+                    };
+                }
+
+                return new GetUserRESPONSE()
+                {
+                    Code = ResStatusCode.Success,
+                    user = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Thêm 1 sản phẩm vào database
+        /// </summary>
+        /// <returns></returns>
+        public AddUserRESPONSE AddUser(AddUserREQUEST req)
+        {
+            try
+            {
+                int ID = foodDAO.AddUser(req);
+                if (ID > 0)
+                {
+                    return new AddUserRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                        user = new User()
+                        {
+                            ID = ID,
+                            AVATAR = req.AVATAR,
+                            NAME = req.NAME ,
+                            TOKEN = req.TOKEN,
+                            TYPE = req.TYPE
+                        }
+                    };
+                }
+
+                return new AddUserRESPONSE()
+                {
+                    Code = ResStatusCode.Success,
+                    user = null
                 };
 
             }

@@ -44,8 +44,18 @@ namespace FoodServer.Models
 
     public class GetUserComment
     {
-        public List<UserComment> userComments { set; get; }
+        public List<UserCommentRESPONSE> userComments { set; get; }
         public ResStatusCode Code { set; get; }
+    }
+
+    public class UserCommentRESPONSE
+    {
+        public int ID { set; get; }
+        public int FOOD_ID { set; get; }
+        public int USER_ID { set; get; }
+        public string COMMENT { set; get; }
+        public string USER_NAME { set; get; }
+        public string USER_AVATAR { set; get; }
     }
 
     public class UpdateEvalRESPONSE
@@ -76,5 +86,28 @@ namespace FoodServer.Models
     {
         public ResStatusCode Code { set; get; }
         public FoodEvaluation foodEval { set; get; }
+    }
+
+    public class AddUserFavoriteFoodRESPONSE
+    {
+        public ResStatusCode Code { set; get; }
+        public UserFavoriteFood userFavoriteFood { set; get; }
+    }
+
+    public class GetUserFavoriteRESPONSE
+    {
+        public ResStatusCode Code { set; get; }
+        public UserFavoriteFood userFavoriteFood { set; get; }
+    }
+
+    public class DeleteUserFavoriteFoodRESPONSE
+    {
+        public ResStatusCode Code { set; get; }
+    }
+
+    public class AddUserRESPONSE
+    {
+        public ResStatusCode Code { set; get; }
+        public User user { set; get; }
     }
 }

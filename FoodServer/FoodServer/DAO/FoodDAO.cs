@@ -308,5 +308,101 @@ namespace FoodServer.DAO
                 throw;
             }
         }
+
+        /// <summary>
+        /// ADD vào bảng User_favorite_food
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public int AddUserFavoriteFood(AddUserFavoriteREQUEST req)
+        {
+            try
+            {
+                return Database.Database.GetInstance().InsertTblUserFavoriteFood(req);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lấy đánh giá
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public T GetUserFavoriteByID<T>(int UserID, int FoodID)
+        {
+            try
+            {
+                object result = null;
+                result = Database.Database.GetInstance().GetUserFavoriteByID<T>(UserID, FoodID);
+
+                return (T)result;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lấy danh sách Item Meta theo item id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public int DeleteUserFoodFavorite(int id)
+        {
+            try
+            {
+                return Database.Database.GetInstance().DeleteUserFoodFavorite(id);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lấy user by id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public T GetUserByToken<T>(string Token)
+        {
+            try
+            {
+                object result = null;
+                result = Database.Database.GetInstance().GetUserByToken<T>(Token);
+
+                return (T)result;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// ADD vào bảng User 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public int AddUser(AddUserREQUEST req)
+        {
+            try
+            {
+                return Database.Database.GetInstance().InsertTblUser(req);
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
