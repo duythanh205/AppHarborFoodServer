@@ -425,5 +425,27 @@ namespace FoodServer.DAO
                 throw;
             }
         }
+
+        //------------------------------------------//
+        /// <summary>
+        /// Từ danh sách Discount. Lấy danh sách Food
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public T GetListFoodEvalFromFood<T>(List<Food> req)
+        {
+            try
+            {
+                object result = null;
+                result = Database.Database.GetInstance().GetListFoodEvalFromFood<T>(req);
+
+                return (T)result;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

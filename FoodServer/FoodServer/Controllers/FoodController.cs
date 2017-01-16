@@ -445,5 +445,26 @@ namespace FoodServer.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
             }
         }
+
+
+        //------------------------------------------------------------------------------------------------------//
+        /// <summary>
+        /// Lấy các món ăn mới nhất
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v2/GetNewFood")]
+        [HttpGet]
+        public HttpResponseMessage GetNewFoodVer2()
+        {
+            try
+            {
+                var result = foodService.GetNewFoodVer2();
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.ListFoodRes));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
     }
 }

@@ -1210,5 +1210,67 @@ namespace FoodServer.Database
                 }
             }
         }
+
+        //---------------------------------------------------------------------------//
+        /// <summary>
+        /// Lấy các Food theo Discount
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public T GetListFoodEvalFromFood<T>(List<Food> req)
+        {
+            SqlDataReader reader = null;
+            List<FoodEvaluation> list = new List<FoodEvaluation>();
+            object result = null;
+            string query = "select* from FOOD_EVALUATION where FOOD_ID = @id_food";
+
+            try
+            {
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    cmd.Parameters.Add("@id_food", SqlDbType.Int);
+
+                    foreach (var food in req)
+                    {
+                        cmd.Parameters["@id_food"].Value = food.ID;
+                        reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            list.Add(new FoodEvaluation()
+                            {
+                                ID = (int)reader["ID"],
+                                AVARAGE_POINT = float.Parse(reader["AVARAGE_POINT"].ToString()),
+                                FOOD_ID = (int)reader["FOOD_ID"],
+                                TOTAL_POINT = float.Parse(reader["TOTAL_POINT"].ToString()),
+                                TOTAL_USER = (int)reader["TOTAL_USER"],
+                            });
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                result = list.ToList();
+                return (T)result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
     }
 }

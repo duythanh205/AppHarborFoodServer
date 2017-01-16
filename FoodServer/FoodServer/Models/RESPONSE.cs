@@ -133,4 +133,24 @@ namespace FoodServer.Models
         public string FOOD_PRICE { set; get; }
     }
 
+
+    public class GetFoodRESPONSEVer2
+    {
+        public List<FoodRESPONSEVer2> ListFoodRes { set; get; }
+        public ResStatusCode Code { set; get; }
+    }
+
+    public class FoodRESPONSEVer2
+    {
+        public Food Food { set; get; }
+        public FoodDiscount FoodDiscount { set; get; }
+        public FoodEvaluation FoodEvalution { set; get; }
+
+        public FoodRESPONSEVer2()
+        {
+            Food = new Food();
+            FoodDiscount = new FoodDiscount();
+            FoodEvalution = new FoodEvaluation();
+        }
+    }
 }
