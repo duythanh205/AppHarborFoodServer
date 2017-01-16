@@ -56,4 +56,10 @@ namespace FoodServer.Models
         public string TYPE { set; get; }
         public string TOKEN { set; get; }
     }
+
+    public class UpdateEvalVer2REQUEST
+    {
+        public int ID { set; get; }
+        public float EVALUATION { set; get; }
+    }
 }

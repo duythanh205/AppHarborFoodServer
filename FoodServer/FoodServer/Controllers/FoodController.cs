@@ -186,16 +186,16 @@ namespace FoodServer.Controllers
         /// <returns></returns>
         [Route("Api/Food/v1/UpdateEval")]
         [HttpPut]
-        public HttpResponseMessage UpdateEval([FromBody] UpdateEvalREQUEST req)
+        public HttpResponseMessage UpdateEval([FromBody] UpdateEvalVer2REQUEST req)
         {
             try
             {
-                if (req.EvalID < 0 || req.Point < 0 || req.Point > 10)
+                if (req.ID < 0 || req.EVALUATION < 0 || req.EVALUATION > 10)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
                 }
 
-                var result = foodService.UpdateEval(req.EvalID, req.Point);
+                var result = foodService.UpdateEval(req.ID, req.EVALUATION);
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.userEval));
             }
             catch
