@@ -404,5 +404,26 @@ namespace FoodServer.DAO
                 throw;
             }
         }
+
+        /// <summary>
+        /// Lấy user comment
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public T GetAllUserFavoriteByID<T>(int UserID)
+        {
+            try
+            {
+                object result = null;
+                result = Database.Database.GetInstance().GetAllUserFavoriteByID<T>(UserID);
+
+                return (T)result;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

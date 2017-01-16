@@ -110,4 +110,27 @@ namespace FoodServer.Models
         public ResStatusCode Code { set; get; }
         public User user { set; get; }
     }
+
+    public class GetAllUserFavoriteRESPONSE
+    {
+        public ResStatusCode Code { set; get; }
+        public List<UserFavoriteResponseBE> Data { set; get; }
+    }
+
+    public class UserFavoriteResponseBE
+    {
+        public int USER_FAVORITE_FOOD_ID { set; get; }
+        public int USER_ID { set; get; }
+        public int FOOD_ID { set; get; }
+        public string FAVORITE_FOOD_DESCRIPTION { set; get; }
+
+        public string FOOD_NAME { set; get; }
+        public string FOOD_ADDRESS { set; get; }
+        public string FOOD_AVATAR { set; get; }
+        public DateTime FOOD_CREATED_DATE { set; get; }
+        public string FOOD_PHONE { set; get; }
+        public string FOOD_FACEBOOK { set; get; }
+        public string FOOD_PRICE { set; get; }
+    }
+
 }

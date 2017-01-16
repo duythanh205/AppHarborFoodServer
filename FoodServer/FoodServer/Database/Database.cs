@@ -1135,6 +1135,80 @@ namespace FoodServer.Database
             }
         }
 
+        /// <summary>
+        /// Lấy user comment 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public T GetAllUserFavoriteByID<T>(int UserID)
+        {
+            SqlDataReader reader = null;
+            List<UserFavoriteResponseBE> data = new List<UserFavoriteResponseBE>();
+            object result = null;
+            string query = "select* from USER_FAVORITE_FOOD where USER_ID = @UserID";
 
+            try
+            {
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserID;
+
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        data.Add(new UserFavoriteResponseBE()
+                        {
+                            FAVORITE_FOOD_DESCRIPTION = reader["FAVORITE_FOOD_DESCRIPTION"].ToString().Trim(),
+                            FOOD_ID = (int)reader["FOOD_ID"],
+                            USER_FAVORITE_FOOD_ID = (int)reader["ID"],
+                            USER_ID = (int)reader["USER_ID"],
+                        });
+                    }
+
+                    reader.Close();
+                }
+
+                data.ForEach(f =>
+                {
+                    string getQuery = string.Format("select* from FOODS where ID = {0}", f.FOOD_ID);
+                    using (SqlCommand command = new SqlCommand(getQuery, connect))
+                    {
+                        SqlDataReader getReader = command.ExecuteReader();
+
+                        getReader.Read();
+
+                        f.FOOD_NAME = getReader["NAME"].ToString().Trim();
+                        f.FOOD_ADDRESS = getReader["ADDRESS"].ToString().Trim();
+                        f.FOOD_AVATAR = getReader["AVATAR"].ToString().Trim();
+                        f.FOOD_CREATED_DATE = (DateTime)getReader["CREATED_DATE"];
+                        f.FOOD_PHONE = getReader["PHONE"].ToString().Trim();
+                        f.FOOD_FACEBOOK = getReader["FACEBOOK"].ToString().Trim();
+                        f.FOOD_PRICE = getReader["PRICE"].ToString().Trim();
+                       
+                        getReader.Close();
+                    }
+                });
+
+                result = data;
+                return (T)result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
     }
 }

@@ -421,5 +421,29 @@ namespace FoodServer.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
             }
         }
+
+        /// <summary>
+        /// Lấy comment của user
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v1/GetAllUserFavorite/{UserID}")]
+        [HttpGet]
+        public HttpResponseMessage GetAllUserFavorite(int UserID)
+        {
+            try
+            {
+                if (UserID < 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
+                }
+
+                var result = foodService.GetAllUserFavoriteByID(UserID);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.Data));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
     }
 }

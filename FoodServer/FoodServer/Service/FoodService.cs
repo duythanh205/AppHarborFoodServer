@@ -639,5 +639,38 @@ namespace FoodServer.Service
                 throw ex;
             }
         }
+
+
+        /// <summary>
+        /// Lấy đánh giá
+        /// </summary>
+        /// <returns></returns>
+        public GetAllUserFavoriteRESPONSE GetAllUserFavoriteByID(int UserID)
+        {
+            try
+            {
+                var result = foodDAO.GetAllUserFavoriteByID<List<UserFavoriteResponseBE>>(UserID);
+                if (result != null)
+                {
+
+                    return new GetAllUserFavoriteRESPONSE()
+                    {
+                        Code = ResStatusCode.Success,
+                        Data = result
+                    };
+                }
+
+                return new GetAllUserFavoriteRESPONSE()
+                {
+                    Code = ResStatusCode.Success,
+                    Data = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
