@@ -1272,5 +1272,81 @@ namespace FoodServer.Database
                 }
             }
         }
+
+        /// <summary>
+        /// Lấy user_food_favorite by id 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public T GetUserFavoriteByIDVer2<T>(int UserID, int FoodID)
+        {
+            SqlDataReader reader = null;
+            UserFavEvalBE dataRes = new UserFavEvalBE();
+            object result = null;
+            string query = "select* from USER_FAVORITE_FOOD where USER_ID = @UserID and FOOD_ID = @FoodID";
+
+            try
+            {
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserID;
+                    cmd.Parameters.Add("@FoodID", SqlDbType.Int).Value = FoodID;
+
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        dataRes.userFavorite = new UserFavoriteFood()
+                        {
+                            FAVORITE_FOOD_DESCRIPTION = reader["FAVORITE_FOOD_DESCRIPTION"].ToString().Trim(),
+                            FOOD_ID = (int)reader["FOOD_ID"],
+                            ID = (int)reader["ID"],
+                            USER_ID = (int)reader["USER_ID"],
+                        };
+                    }
+
+                    reader.Close();
+                }
+
+                string myQuery = "select* from USER_FOOD_EVALUATION where USER_ID = @UserID and FOOD_ID = @FoodID";
+                using (SqlCommand cmd = new SqlCommand(myQuery, connect))
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserID;
+                    cmd.Parameters.Add("@FoodID", SqlDbType.Int).Value = FoodID;
+
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        dataRes.userEval = new UserEvaluation()
+                        {
+                            EVALUATION = float.Parse(reader["EVALUATION"].ToString().Trim()),
+                            FOOD_ID = (int)reader["FOOD_ID"],
+                            ID = (int)reader["ID"],
+                            USER_ID = (int)reader["USER_ID"],
+                        };
+                    }
+
+                }
+
+                result = dataRes;
+                return (T)result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                if (connect != null)
+                {
+                    connect.Close();
+                }
+            }
+        }
     }
 }

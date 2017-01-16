@@ -766,5 +766,46 @@ namespace FoodServer.Service
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Lấy đánh giá
+        /// </summary>
+        /// <returns></returns>
+        public GetUserCommentVer2 GetUserCommentVer2(int FoodID, int UserID)
+        {
+            try
+            {
+                // Đã lấy dc danh sách comment
+                var result = foodDAO.GetUserComment<List<UserCommentRESPONSE>>(FoodID);
+                if (result != null)
+                {
+                    // Lấy tiếp user favorite và User Eval
+                    UserFavEvalBE dataRes = Database.Database.GetInstance().GetUserFavoriteByIDVer2<UserFavEvalBE>(UserID, FoodID);
+
+
+                    return new GetUserCommentVer2()
+                    {
+                        Code = ResStatusCode.Success,
+                        Data = new GetUserCmtDataVer2()
+                        {
+                            userComments = result,
+                            userEval = dataRes.userEval,
+                            userFavorite = dataRes.userFavorite
+                        }
+                    };
+                }
+
+                return new GetUserCommentVer2()
+                {
+                    Code = ResStatusCode.Success,
+                    Data = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -153,4 +153,23 @@ namespace FoodServer.Models
             FoodEvalution = new FoodEvaluation();
         }
     }
+
+    public class GetUserCommentVer2
+    {
+        public GetUserCmtDataVer2 Data { set; get; }
+        public ResStatusCode Code { set; get; }
+    }
+
+    public class GetUserCmtDataVer2
+    {
+        public List<UserCommentRESPONSE> userComments { set; get; }
+        public UserEvaluation userEval { set; get; }
+        public UserFavoriteFood userFavorite { set; get; }
+    }
+
+    public class UserFavEvalBE
+    {
+        public UserEvaluation userEval { set; get; }
+        public UserFavoriteFood userFavorite { set; get; }
+    }
 }

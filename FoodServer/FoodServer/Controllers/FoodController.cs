@@ -485,5 +485,29 @@ namespace FoodServer.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
             }
         }
+
+        /// <summary>
+        /// Lấy comment của user
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v2/GetUserComment/{FoodID}/{UserID}")]
+        [HttpGet]
+        public HttpResponseMessage GetUserCommentVer2(int FoodID, int UserID)
+        {
+            try
+            {
+                if (FoodID < 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.BadRequest, null));
+                }
+
+                var result = foodService.GetUserCommentVer2(FoodID, UserID);
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.Data));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
     }
 }
