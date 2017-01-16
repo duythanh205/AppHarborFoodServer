@@ -720,5 +720,51 @@ namespace FoodServer.Service
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Lấy tất cả món ăn giảm giá
+        /// </summary>
+        /// <returns></returns>
+        public GetFoodRESPONSEVer2 GetFoodDiscountVer2()
+        {
+            try
+            {
+                var ListDiscount = foodDAO.GetAllDiscount<List<FoodDiscount>>();
+                if (ListDiscount != null && ListDiscount.Count > 0)
+                {
+                    var ListFood = foodDAO.GetListFoodFromDiscount<List<Food>>(ListDiscount);
+                    var ListFoodEval = foodDAO.GetListFoodEvalFromFood<List<FoodEvaluation>>(ListFood);
+                    int i = 0;
+                    List<FoodRESPONSEVer2> res = new List<FoodRESPONSEVer2>();
+                    ListFood.ForEach(f =>
+                    {
+                        var discount = ListDiscount.FirstOrDefault(w => w.FOOD_ID == f.ID);
+                        res.Add(new FoodRESPONSEVer2()
+                        {
+                            Food = f,
+                            FoodDiscount = discount,
+                            FoodEvalution = ListFoodEval[i++]
+                        });
+                    });
+
+                    return new GetFoodRESPONSEVer2()
+                    {
+                        Code = ResStatusCode.Success,
+                        ListFoodRes = res
+                    };
+                }
+
+                return new GetFoodRESPONSEVer2()
+                {
+                    Code = ResStatusCode.Success,
+                    ListFoodRes = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -466,5 +466,24 @@ namespace FoodServer.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
             }
         }
+
+        /// <summary>
+        /// Lấy các món ăn giảm giá
+        /// </summary>
+        /// <returns></returns>
+        [Route("Api/Food/v2/GetFoodDiscount")]
+        [HttpGet]
+        public HttpResponseMessage GetFoodDiscountVer2()
+        {
+            try
+            {
+                var result = foodService.GetFoodDiscountVer2();
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(result.Code, result.ListFoodRes));
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ResponseDataFactory.getInstace(ResStatusCode.InternalServerError));
+            }
+        }
     }
 }
