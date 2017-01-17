@@ -111,7 +111,7 @@ namespace FoodServer.Database
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand(query, connect))
                 {
-                    cmd.Parameters.Add("@date", SqlDbType.DateTime).Value = DateTime.Now.AddDays(-5).ToStartDate();
+                    cmd.Parameters.Add("@date", SqlDbType.DateTime).Value = DateTime.Now.AddDays(-2).ToStartDate();
 
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
